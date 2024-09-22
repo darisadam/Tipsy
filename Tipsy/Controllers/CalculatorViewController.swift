@@ -62,4 +62,29 @@ class CalculatorViewController: UIViewController {
             destination.split = numberOfPeople
         }
     }
+    
+    // UITextFieldDelegate method to validate input
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // Allow backspace
+        if string.isEmpty {
+            return true
+        }
+        
+        // Check if the input is a valid number
+        let allowedCharacters = CharacterSet(charactersIn: "0123456789.")
+        let characterSet = CharacterSet(charactersIn: string)
+        if !allowedCharacters.isSuperset(of: characterSet) {
+            return false
+        }
+        
+        // Check for multiple decimal points
+        let currentText = textField.text ?? ""
+        let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        let decimalCount = prospectiveText.components(separatedBy: ".").count - 1
+        if decimalCount > 1 {
+            return false
+        }
+        
+        return true
+    }
 }
