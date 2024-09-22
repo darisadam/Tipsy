@@ -18,6 +18,7 @@ class CalculatorViewController: UIViewController {
     var tip = 0.10
     var numberOfPeople = 2
     var billTotal = 0.0
+    var finalResult = "0.0"
     
     @IBAction func tipChanged(_ sender: UIButton) {
         billTextField.endEditing(true)
@@ -45,10 +46,20 @@ class CalculatorViewController: UIViewController {
         
         if bill != "" {
             billTotal = Double(bill)!
-            let result = billTotal * (1+tip) / Double(numberOfPeople)
-            let resultTo2DecimalPlaces = String(format: "%.2f", result)
-            print (resultTo2DecimalPlaces)
+            let result = billTotal * (1 + tip) / Double(numberOfPeople)
+            finalResult = String(format: "%.2f", result)
         }
+        
+        self.performSegue(withIdentifier: "goToResult", sender: self)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToResult" {
+            let destination = segue.destination as! ResultsViewController
+            
+            destination.result = finalResult
+            destination.tip = Int(tip * 100)
+            destination.split = numberOfPeople
+        }
+    }
 }
